@@ -286,9 +286,13 @@ parts.forEach((p,i)=>{
          xnc+=`<bl name="${tn}" y="${Y}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
        else xnc+=`<br name="${tn}" y="${Y}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
      }else if(s.includes("верх")){
-       let X=h.x;\n       if(h.corner.startsWith("П."))X=p.L-h.x;\n       xnc+=`<bt name="${tn}" x="${X}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
+       let X=h.x;
+       if(h.corner.startsWith("П."))X=p.L-h.x;
+       xnc+=`<bt name="${tn}" x="${X}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
      }else if(s.includes("ниж")){
-       let X=h.x;\n       if(h.corner.startsWith("П."))X=p.L-h.x;\n       xnc+=`<bb name="${tn}" x="${X}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
+       let X=h.x;
+       if(h.corner.startsWith("П."))X=p.L-h.x;
+       xnc+=`<bb name="${tn}" x="${X}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
      }
    }
    xnc+="</program>";
