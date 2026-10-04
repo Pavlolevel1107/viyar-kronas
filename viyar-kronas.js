@@ -286,9 +286,9 @@ parts.forEach((p,i)=>{
          xnc+=`<bl name="${tn}" y="${Y}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
        else xnc+=`<br name="${tn}" y="${Y}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
      }else if(s.includes("верх")){
-       xnc+=`<bt name="${tn}" x="${h.x}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
+       let X=h.x;\n       if(h.corner.startsWith("П."))X=p.L-h.x;\n       xnc+=`<bt name="${tn}" x="${X}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
      }else if(s.includes("ниж")){
-       xnc+=`<bb name="${tn}" x="${h.x}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
+       let X=h.x;\n       if(h.corner.startsWith("П."))X=p.L-h.x;\n       xnc+=`<bb name="${tn}" x="${X}" z="${h.dp}" m="true" dp="${h.dp}"/>`;
      }
    }
    xnc+="</program>";
@@ -544,7 +544,7 @@ parts.forEach((p,i)=>{
 
 let xml=`<?xml version="1.0" encoding="UTF-8"?>
 <project currency="грн" version="1">
-<good id="1" typeId="product" count="1" name="ViyarPro V5.21">
+<good id="1" typeId="product" count="1" name="ViyarPro V5.23">
 `;
 for(const x of pp)xml+=`<part id="${x.id}" l="${x.p.L}" w="${x.p.W}" dl="${x.p.L}" dw="${x.p.W}" count="${x.p.qty}" txt="false" name="${E(x.p.name)}"${x.attrs}/>\n`;
 xml+=`</good>\n<good id="2" typeId="tool.cutting"/>\n`;
@@ -570,7 +570,7 @@ xml+=`</project>`;
 
 const blob=new Blob([xml],{type:"application/xml;charset=utf-8"});
 const url=URL.createObjectURL(blob),a=document.createElement("a");
-a.href=url;a.download="Viyar_to_KRONAS_V5_21.project";
+a.href=url;a.download="Viyar_to_KRONAS_V5_23.project";
 document.body.appendChild(a);a.click();a.remove();
 setTimeout(()=>URL.revokeObjectURL(url),1500);
 
@@ -585,7 +585,7 @@ const rabbets=parts.reduce((n,p)=>n+p.rabbets.length,0);
 const rabbetsFull=parts.reduce((n,p)=>n+p.rabbets.filter(q=>q.full===1).length,0);
 const rabbetsPartial=rabbets-rabbetsFull;
 
-console.log("===== VIYAR → KRONAS V5.21 =====");
+console.log("===== VIYAR → KRONAS V5.23 =====");
 console.log("Деталей:",parts.length);
 console.log("Отворів у Viyar:",allH);
 console.log("Експортовано отворів:",exportedH);
@@ -602,7 +602,7 @@ console.log("Матеріалів:",mats.size);
 console.log("Крайок:",bands.size);
 console.log("================================");
 
-alert("V5.21 ГОТОВО\n\nДеталей: "+parts.length+
+alert("V5.23 ГОТОВО\n\nДеталей: "+parts.length+
 "\nОтворів Viyar: "+allH+
 "\nЕкспортовано: "+exportedH+
 "\nТильних окремо: "+backH+
@@ -614,6 +614,6 @@ alert("V5.21 ГОТОВО\n\nДеталей: "+parts.length+
 "\nЧвертей Viyar: "+rabbets+
 "\nЧвертей експортовано: "+rabbetsFull+
 "\nЧасткових пропущено: "+rabbetsPartial+
-"\n\nViyar_to_KRONAS_V5_21.project");
-}catch(e){console.error(e);alert("V5.21 ПОМИЛКА:\n"+e.message);}
+"\n\nViyar_to_KRONAS_V5_23.project");
+}catch(e){console.error(e);alert("V5.23 ПОМИЛКА:\n"+e.message);}
 })();
