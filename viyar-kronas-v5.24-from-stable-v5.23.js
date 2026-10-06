@@ -589,12 +589,7 @@ a.href=url;a.download="Viyar_to_KRONAS_V5_23.project";
 document.body.appendChild(a);a.click();a.remove();
 setTimeout(()=>URL.revokeObjectURL(url),1500);
 
- // V5.24 ADD-ONLY: зберігаємо знайдені зрізи окремо. V5.23 .project не змінюється.
- {
-   const bevelData=JSON.stringify({format:"VIYAR_KRONAS_V5_24_BEVELS",version:"5.24",source:"V5.23_LOCKED",count:nativeBevels.length,bevels:nativeBevels},null,2);
-   const bb=new Blob([bevelData],{type:"application/json;charset=utf-8"}),bu=URL.createObjectURL(bb),ba=document.createElement("a");
-   ba.href=bu;ba.download="KRONAS_V5_24_BEVELS.json";document.body.appendChild(ba);ba.click();ba.remove();setTimeout(()=>URL.revokeObjectURL(bu),1500);
- }
+ // V5.24: зрізи знайдені: ${nativeBevels.length}. Других завантажень тут НЕ запускаємо.
 const allH=parts.reduce((n,p)=>n+p.holes.length,0);
 const exportedH=ops.filter(x=>x.type==="XNC").reduce((n,x)=>n+x.count,0);
 const backH=parts.reduce((n,p)=>n+p.holes.filter(h=>h.side.toLowerCase().includes("тиль")).length,0);
