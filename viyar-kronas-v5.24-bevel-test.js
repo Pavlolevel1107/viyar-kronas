@@ -46,13 +46,23 @@ for(const r of rows){
  for(const h of holesRaw){
   const s=h.side.toLowerCase(); let side="",x=0,y=0,z="",X=h.x,Y=h.y;
   if(s.includes("лиць")||s.includes("лиц")||s.includes("тиль")){
-   // Direct JSON: Viyar table X/Y are already the physical coordinates we need.
-   // Do not mirror by corner; that was moving holes to the opposite side.
-   side=(s.includes("тиль")?"back":"front"); x=h.x;y=h.y;z="";
+   // EXACT V5.23 transform first.
+   switch(h.corner){
+    case "Л.В.": X=h.x;     Y=h.y;     break;
+    case "П.В.": X=L-h.x;   Y=h.y;     break;
+    case "Л.Н.": X=h.x;     Y=W-h.y;   break;
+    case "П.Н.": X=L-h.x;   Y=W-h.y;   break;
+   }
+   // KRONAS normalized JSON produced by the proven V5.23 PROJECT:
+   // front keeps XNC Y; back import reverses Y once.
+   if(s.includes("тиль")){side="back";x=X;y=W-Y;z="";}
+   else {side="front";x=X;y=Y;z="";}
   }else if(s.includes("ліва")||s.includes("лева")||s.includes("права")){
-   if(h.corner.endsWith("Н."))Y=W-h.y;
+   if(h.corner.endsWith("В."))Y=h.y;
+   else if(h.corner.endsWith("Н."))Y=W-h.y;
    side=(s.includes("прав")?"right":"left"); x=(side==="right"?L:0);y=Y;z=T/2;
   }else if(s.includes("верх")||s.includes("ниж")){
+   X=h.x;
    if(h.corner.startsWith("П."))X=L-h.x;
    side=s.includes("верх")?"top":"bottom";x=X;y=0;z=T/2;
   }else continue;
@@ -96,7 +106,7 @@ for(const r of rows){
 
 const data={glue_type:"PUR",glue_color:"white",products:{"1":{id:1,name:"ViyarPro V5.24 FULL TEST",code:""}},materials,edges:edgeDefs,furnitures:[],details,emptyList:[],constructor:{created:{provider_name:"Kronas-Giblab",provider_version:"1.0"}}};
 const txt=JSON.stringify(data,null,2),blob=new Blob([txt],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-a.href=url;a.download="Viyar_to_KRONAS_V5_24_FULL_TEST_R5.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+a.href=url;a.download="Viyar_to_KRONAS_V5_24_FROM_V523_R6.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
 const hc=details.reduce((n,d)=>n+d.holes.length,0),gc=details.reduce((n,d)=>n+d.rects.length,0),bc=details.reduce((n,d)=>n+d.bevels.length,0);
 alert("V5.24 FULL TEST\n\nДеталей: "+details.length+"\nОтворів: "+hc+"\nПазів: "+gc+"\nКрайок: "+edgeDefs.length+"\nЗрізів: "+bc+"\n\nV5.23 НЕ ЗМІНЕНО.");
 }catch(e){console.error(e);alert("V5.24 FULL TEST ПОМИЛКА:\n"+e.message)}})();
