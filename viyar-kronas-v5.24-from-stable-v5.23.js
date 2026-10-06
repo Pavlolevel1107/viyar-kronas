@@ -589,54 +589,18 @@ a.href=url;a.download="Viyar_to_KRONAS_V5_23.project";
 document.body.appendChild(a);a.click();a.remove();
 setTimeout(()=>URL.revokeObjectURL(url),1500);
 
- // V5.24 ADD-ONLY: генеруємо KRONAS patcher. Він змінює ТІЛЬКИ bevels[].
+ // V5.24 ADD-ONLY: один sidecar зі зрізами. V5.23 .project не змінюється.
  {
-   const payload=JSON.stringify(nativeBevels).replace(/</g,"\\u003c");
-   const patcher=`javascript:(async()=>{try{
-const B=${payload};
-const I=document.createElement("input");I.type="file";I.accept=".json,application/json";
-I.onchange=async()=>{try{
- const F=I.files&&I.files[0];if(!F)return;
- const J=JSON.parse(await F.text()),D=Array.isArray(J.details)?J.details:(Array.isArray(J?.data?.details)?J.data.details:null);
- if(!D)throw Error("У JSON KRONAS не знайдено details[]");
- const norm=x=>String(x??"").replace(/\\s+/g," ").trim().toLowerCase();
- const used=new Set();let n=0;
- for(const b of B){
-   let k=-1;
-   for(let i=0;i<D.length;i++){
-     if(used.has(i))continue;
-     const d=D[i];
-     const dh=Number(d.h),dl=Number(d.l);
-     const sameSize=(Math.abs(dl-b.l)<0.01&&Math.abs(dh-b.w)<0.01)||(Math.abs(dl-b.w)<0.01&&Math.abs(dh-b.l)<0.01);
-     if(sameSize&&norm(d.name)===norm(b.detail_name)){k=i;break}
-   }
-   if(k<0){
-     for(let i=0;i<D.length;i++){
-       if(used.has(i))continue;
-       const d=D[i],dh=Number(d.h),dl=Number(d.l);
-       if((Math.abs(dl-b.l)<0.01&&Math.abs(dh-b.w)<0.01)||(Math.abs(dl-b.w)<0.01&&Math.abs(dh-b.l)<0.01)){k=i;break}
-     }
-   }
-   if(k<0){console.warn("BEVEL: detail not found",b);continue}
-   const d=D[k];if(!Array.isArray(d.bevels))d.bevels=[];
-   const exists=d.bevels.some(x=>x&&x.side===b.side&&Number(x.start)===Number(b.start)&&Number(x.alpha)===Number(b.alpha));
-   if(!exists)d.bevels.push({id:(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random()),subType:"bevel",validationErrors:[],isHidden:false,alpha:Number(b.alpha),dataForConstructor:{},excludeFromCalculation:false,isGrinding:false,isTemplate:null,side:b.side,start:Number(b.start)});
-   used.add(k);n++;
- }
- const out=new Blob([JSON.stringify(J,null,2)],{type:"application/json;charset=utf-8"}),u=URL.createObjectURL(out),a=document.createElement("a");
- a.href=u;a.download="KRONAS_V5_24_FINAL.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);
- alert("KRONAS V5.24: додано зрізів "+n+". Інші дані JSON не змінювались.");
-}catch(e){console.error(e);alert("KRONAS V5.24 PATCH ERROR: "+e.message)}};
-I.click();
-}catch(e){console.error(e);alert("KRONAS V5.24 PATCH ERROR: "+e.message)}})()`;
-   const pb=new Blob([patcher],{type:"text/plain;charset=utf-8"}),pu=URL.createObjectURL(pb),pa=document.createElement("a");
-   pa.href=pu;pa.download="KRONAS_V5_24_PATCHER.txt";document.body.appendChild(pa);pa.click();pa.remove();setTimeout(()=>URL.revokeObjectURL(pu),1500);
- }
- // V5.24 ADD-ONLY: sidecar з нативними bevels; .project лишається V5.23.
- {
-   const bb=new Blob([JSON.stringify({format:"VIYAR_KRONAS_BEVELS",version:"5.24",bevels:nativeBevels},null,2)],{type:"application/json;charset=utf-8"});
+   const data={
+     format:"VIYAR_KRONAS_V5_24_BEVELS",
+     version:"5.24",
+     source:"V5.23_LOCKED",
+     count:nativeBevels.length,
+     bevels:nativeBevels
+   };
+   const bb=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});
    const bu=URL.createObjectURL(bb),ba=document.createElement("a");
-   ba.href=bu;ba.download="Viyar_to_KRONAS_V5_24_BEVELS.json";
+   ba.href=bu;ba.download="KRONAS_V5_24_BEVELS.json";
    document.body.appendChild(ba);ba.click();ba.remove();
    setTimeout(()=>URL.revokeObjectURL(bu),1500);
  }
@@ -682,8 +646,8 @@ alert("V5.24 ГОТОВО\n\nДеталей: "+parts.length+
 "\nЧвертей експортовано: "+rabbetsFull+
 "\nЧасткових пропущено: "+rabbetsPartial+
 "\nЗрізів 45° знайдено: "+nativeBevels.length+
-"\n\nViyar_to_KRONAS_V5_23.project"+
-"\nViyar_to_KRONAS_V5_24_BEVELS.json"+
-"\nKRONAS_V5_24_PATCHER.txt");
+"\n\nСкачано:"+
+"\n1. Viyar_to_KRONAS_V5_23.project"+
+"\n2. KRONAS_V5_24_BEVELS.json");
 }catch(e){console.error(e);alert("V5.24 ПОМИЛКА:\n"+e.message);}
 })();
