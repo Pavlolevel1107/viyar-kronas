@@ -106,7 +106,7 @@ for(const r of rows){
 
 const data={glue_type:"PUR",glue_color:"white",products:{"1":{id:1,name:"ViyarPro V5.24 FULL TEST",code:""}},materials,edges:edgeDefs,furnitures:[],details,emptyList:[],constructor:{created:{provider_name:"Kronas-Giblab",provider_version:"1.0"}}};
 const txt=JSON.stringify(data,null,2),blob=new Blob([txt],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-a.href=url;a.download="Viyar_to_KRONAS_V5_24_FROM_V523_R6.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+a.href=url;a.download="Viyar_to_KRONAS_V5_24_FROM_V523_R7.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
 const hc=details.reduce((n,d)=>n+d.holes.length,0),gc=details.reduce((n,d)=>n+d.rects.length,0),bc=details.reduce((n,d)=>n+d.bevels.length,0);
 alert("V5.24 FULL TEST\n\nДеталей: "+details.length+"\nОтворів: "+hc+"\nПазів: "+gc+"\nКрайок: "+edgeDefs.length+"\nЗрізів: "+bc+"\n\nV5.23 НЕ ЗМІНЕНО.");
 }catch(e){console.error(e);alert("V5.24 FULL TEST ПОМИЛКА:\n"+e.message)}})();
