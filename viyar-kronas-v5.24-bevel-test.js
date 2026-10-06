@@ -47,8 +47,8 @@ for(const r of rows){
   const s=h.side.toLowerCase(); let side="",x=0,y=0,z="",X=h.x,Y=h.y;
   if(s.includes("лиць")||s.includes("лиц")||s.includes("тиль")){
    if(h.corner==="П.В.")X=L-h.x;
-   else if(h.corner==="Л.Н.")Y=W-h.y;
-   else if(h.corner==="П.Н."){X=L-h.x;Y=W-h.y}
+   else if(h.corner==="П.Н.")X=L-h.x;
+   // Y is already the physical Viyar position; do not mirror it.
    side=(s.includes("тиль")?"back":"front"); x=X;y=Y;z="";
   }else if(s.includes("ліва")||s.includes("лева")||s.includes("права")){
    if(h.corner.endsWith("Н."))Y=W-h.y;
