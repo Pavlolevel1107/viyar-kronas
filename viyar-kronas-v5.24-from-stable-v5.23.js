@@ -9,6 +9,7 @@ if(!rows.length)throw Error('Відкрий вкладку "Деталі"');
 
 let gid=10,oid=100;
 const parts=[],mats=new Map(),bands=new Map(),ops=[];
+const nativeBevels=[];
 
 for(const r of rows){
  const key=+r.id.replace("row-","");
@@ -196,6 +197,16 @@ for(const r of rows){
    }
    // На випадок, якщо Viyar змінить обгортку відповіді.
    if(det&&det.data&&typeof det.data==="object")det=det.data;
+
+   // V5.24 ADD-ONLY: зріз торця; логіку V5.23 не змінюємо.
+   for(const bevelSide of ["left","top","right","bottom"]){
+     const be=det?.data_edges?.[bevelSide];
+     if(!be||be.type!=="srezkrom")continue;
+     const alpha=N(be.srez),start=N(be.otstup);
+     if(!alpha)continue;
+     nativeBevels.push({detail_key:key,detail_name:name,l:L,w:W,t:T,side:bevelSide,start,alpha,
+       edge_code:String(be.kromka??""),edge_name:String(be.edgeName??"")});
+   }
 
    rabbets=Array.isArray(det?.rabbets) ? det.rabbets.map(q=>({
      side:Number(q.side),
@@ -578,6 +589,15 @@ a.href=url;a.download="Viyar_to_KRONAS_V5_23.project";
 document.body.appendChild(a);a.click();a.remove();
 setTimeout(()=>URL.revokeObjectURL(url),1500);
 
+ // V5.24 ADD-ONLY: sidecar з нативними bevels; .project лишається V5.23.
+ if(nativeBevels.length){
+   const bb=new Blob([JSON.stringify({format:"VIYAR_KRONAS_BEVELS",version:"5.24",bevels:nativeBevels},null,2)],{type:"application/json;charset=utf-8"});
+   const bu=URL.createObjectURL(bb),ba=document.createElement("a");
+   ba.href=bu;ba.download="Viyar_to_KRONAS_V5_24_BEVELS.json";
+   document.body.appendChild(ba);ba.click();ba.remove();
+   setTimeout(()=>URL.revokeObjectURL(bu),1500);
+ }
+
 const allH=parts.reduce((n,p)=>n+p.holes.length,0);
 const exportedH=ops.filter(x=>x.type==="XNC").reduce((n,x)=>n+x.count,0);
 const backH=parts.reduce((n,p)=>n+p.holes.filter(h=>h.side.toLowerCase().includes("тиль")).length,0);
@@ -589,7 +609,7 @@ const rabbets=parts.reduce((n,p)=>n+p.rabbets.length,0);
 const rabbetsFull=parts.reduce((n,p)=>n+p.rabbets.filter(q=>q.full===1).length,0);
 const rabbetsPartial=rabbets-rabbetsFull;
 
-console.log("===== VIYAR → KRONAS V5.23 =====");
+console.log("===== VIYAR → KRONAS V5.24 / V5.23 LOCKED + BEVEL =====");
 console.log("Деталей:",parts.length);
 console.log("Отворів у Viyar:",allH);
 console.log("Експортовано отворів:",exportedH);
@@ -606,7 +626,7 @@ console.log("Матеріалів:",mats.size);
 console.log("Крайок:",bands.size);
 console.log("================================");
 
-alert("V5.23 ГОТОВО\n\nДеталей: "+parts.length+
+alert("V5.24 ГОТОВО\n\nДеталей: "+parts.length+
 "\nОтворів Viyar: "+allH+
 "\nЕкспортовано: "+exportedH+
 "\nТильних окремо: "+backH+
@@ -619,5 +639,5 @@ alert("V5.23 ГОТОВО\n\nДеталей: "+parts.length+
 "\nЧвертей експортовано: "+rabbetsFull+
 "\nЧасткових пропущено: "+rabbetsPartial+
 "\n\nViyar_to_KRONAS_V5_23.project");
-}catch(e){console.error(e);alert("V5.23 ПОМИЛКА:\n"+e.message);}
+}catch(e){console.error(e);alert("V5.24 ПОМИЛКА:\n"+e.message);}
 })();
