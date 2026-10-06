@@ -590,7 +590,7 @@ document.body.appendChild(a);a.click();a.remove();
 setTimeout(()=>URL.revokeObjectURL(url),1500);
 
  // V5.24 ADD-ONLY: генеруємо KRONAS patcher. Він змінює ТІЛЬКИ bevels[].
- if(nativeBevels.length){
+ {
    const payload=JSON.stringify(nativeBevels).replace(/</g,"\\u003c");
    const patcher=`javascript:(async()=>{try{
 const B=${payload};
@@ -633,7 +633,7 @@ I.click();
    pa.href=pu;pa.download="KRONAS_V5_24_PATCHER.txt";document.body.appendChild(pa);pa.click();pa.remove();setTimeout(()=>URL.revokeObjectURL(pu),1500);
  }
  // V5.24 ADD-ONLY: sidecar з нативними bevels; .project лишається V5.23.
- if(nativeBevels.length){
+ {
    const bb=new Blob([JSON.stringify({format:"VIYAR_KRONAS_BEVELS",version:"5.24",bevels:nativeBevels},null,2)],{type:"application/json;charset=utf-8"});
    const bu=URL.createObjectURL(bb),ba=document.createElement("a");
    ba.href=bu;ba.download="Viyar_to_KRONAS_V5_24_BEVELS.json";
@@ -681,6 +681,9 @@ alert("V5.24 ГОТОВО\n\nДеталей: "+parts.length+
 "\nЧвертей Viyar: "+rabbets+
 "\nЧвертей експортовано: "+rabbetsFull+
 "\nЧасткових пропущено: "+rabbetsPartial+
-"\n\nViyar_to_KRONAS_V5_23.project");
+"\nЗрізів 45° знайдено: "+nativeBevels.length+
+"\n\nViyar_to_KRONAS_V5_23.project"+
+"\nViyar_to_KRONAS_V5_24_BEVELS.json"+
+"\nKRONAS_V5_24_PATCHER.txt");
 }catch(e){console.error(e);alert("V5.24 ПОМИЛКА:\n"+e.message);}
 })();
