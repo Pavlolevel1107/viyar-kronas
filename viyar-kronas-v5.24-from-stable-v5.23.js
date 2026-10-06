@@ -589,20 +589,12 @@ a.href=url;a.download="Viyar_to_KRONAS_V5_23.project";
 document.body.appendChild(a);a.click();a.remove();
 setTimeout(()=>URL.revokeObjectURL(url),1500);
 
- // V5.24 ADD-ONLY: один KRONAS helper. V5.23 .project не змінюється.
+ // V5.24 ADD-ONLY: зберігаємо знайдені зрізи окремо. V5.23 .project не змінюється.
  {
-   const payload=JSON.stringify({format:"VIYAR_KRONAS_V5_24_BEVELS",version:"5.24",source:"V5.23_LOCKED",count:nativeBevels.length,bevels:nativeBevels});
-   const helper=`javascript:(()=>{const B=${payload};const I=document.createElement("input");I.type="file";I.accept=".json,application/json";I.onchange=async()=>{try{const F=I.files&&I.files[0];if(!F)return;const J=JSON.parse(await F.text());const D=Array.isArray(J.details)?J.details:(Array.isArray(J?.data?.details)?J.data.details:null);if(!D)throw Error("Не знайдено details[]");const norm=x=>String(x??"").replace(/\\s+/g," ").trim().toLowerCase();const groups=new Map();for(const b of B.bevels){const k=[norm(b.detail_name),Number(b.l),Number(b.w)].join("|");if(!groups.has(k))groups.set(k,[]);groups.get(k).push(b)}let added=0,matched=0;for(const [k,bs] of groups){const b0=bs[0];let d=D.find(d=>norm(d.name)===norm(b0.detail_name)&&(((Number(d.l)===Number(b0.l))&&(Number(d.h)===Number(b0.w)))||((Number(d.l)===Number(b0.w))&&(Number(d.h)===Number(b0.l)))));if(!d){console.warn("V5.24 detail not found",b0);continue}matched++;if(!Array.isArray(d.bevels))d.bevels=[];for(const b of bs){if(d.bevels.some(x=>x&&x.side===b.side&&Number(x.start)===Number(b.start)&&Number(x.alpha)===Number(b.alpha)))continue;d.bevels.push({id:(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random()),subType:"bevel",validationErrors:[],isHidden:false,alpha:Number(b.alpha),dataForConstructor:{},excludeFromCalculation:false,isGrinding:false,isTemplate:null,side:b.side,start:Number(b.start)});added++}}const O=new Blob([JSON.stringify(J,null,2)],{type:"application/json;charset=utf-8"}),U=URL.createObjectURL(O),A=document.createElement("a");A.href=U;A.download="KRONAS_V5_24_FINAL.json";document.body.appendChild(A);A.click();A.remove();setTimeout(()=>URL.revokeObjectURL(U),1500);alert("V5.24: додано зрізів "+added+" із "+B.count+". Деталей зі зрізами: "+matched+". Інші поля JSON не змінювались.")}catch(e){console.error(e);alert("V5.24 ERROR: "+e.message)}};I.click()})()`;
-   // Chrome часто блокує друге автоматичне завантаження. Тому helper віддаємо ПІСЛЯ підтвердження.
-   window.__KRONAS_V524_HELPER__=helper;
-   setTimeout(()=>{
-     if(confirm("V5.24: .project готовий. Завантажити KRONAS FINALIZER для "+nativeBevels.length+" зрізів?")){
-       const hb=new Blob([window.__KRONAS_V524_HELPER__],{type:"text/plain;charset=utf-8"}),hu=URL.createObjectURL(hb),ha=document.createElement("a");
-       ha.href=hu;ha.download="KRONAS_V5_24_FINALIZER.txt";document.body.appendChild(ha);ha.click();ha.remove();setTimeout(()=>URL.revokeObjectURL(hu),1500);
-     }
-   },300);
+   const bevelData=JSON.stringify({format:"VIYAR_KRONAS_V5_24_BEVELS",version:"5.24",source:"V5.23_LOCKED",count:nativeBevels.length,bevels:nativeBevels},null,2);
+   const bb=new Blob([bevelData],{type:"application/json;charset=utf-8"}),bu=URL.createObjectURL(bb),ba=document.createElement("a");
+   ba.href=bu;ba.download="KRONAS_V5_24_BEVELS.json";document.body.appendChild(ba);ba.click();ba.remove();setTimeout(()=>URL.revokeObjectURL(bu),1500);
  }
-
 const allH=parts.reduce((n,p)=>n+p.holes.length,0);
 const exportedH=ops.filter(x=>x.type==="XNC").reduce((n,x)=>n+x.count,0);
 const backH=parts.reduce((n,p)=>n+p.holes.filter(h=>h.side.toLowerCase().includes("тиль")).length,0);
