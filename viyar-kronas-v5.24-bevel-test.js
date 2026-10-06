@@ -49,7 +49,7 @@ for(const r of rows){
    if(h.corner==="П.В.")X=L-h.x;
    else if(h.corner==="Л.Н.")Y=W-h.y;
    else if(h.corner==="П.Н."){X=L-h.x;Y=W-h.y}
-   side=(s.includes("тиль")?"back":"front"); x=X;y=Y;z="";
+   side=(s.includes("тиль")?"front":"back"); x=X;y=Y;z="";
   }else if(s.includes("ліва")||s.includes("лева")||s.includes("права")){
    if(h.corner.endsWith("Н."))Y=W-h.y;
    side=(s.includes("прав")?"right":"left"); x=(side==="right"?L:0);y=Y;z=T/2;
